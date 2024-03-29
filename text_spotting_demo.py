@@ -32,6 +32,7 @@ sys.path.append(str(Path(__file__).resolve().parents[2] / 'common/python'))
 sys.path.append(str(Path(__file__).resolve().parents[2] / 'common/python/model_zoo'))
 
 import monitors
+import re
 from images_capture import open_images_capture
 from visualizers import InstanceSegmentationVisualizer
 from model_api.performance_metrics import PerformanceMetrics
@@ -158,7 +159,18 @@ def segm_postprocess(box, raw_cls_mask, im_h, im_w):
     return im_mask
 
 
+def vehval(texts):
+    pattern = r'[A-Z]{2}|[a-z]{2}[0-9]{2}'
+
+    for text in texts:
+        if re.match(pattern, text):
+            return "Vehicle Reg No"
+
+
 def main():
+
+    
+
     args = build_argparser().parse_args()
 
     cap = open_images_capture(args.input, args.loop)
@@ -349,7 +361,7 @@ def main():
     metrics.log_total()
     for rep in presenter.reportMeans():
         log.info(rep)
-
+    print(vehval(texts))
     print(texts)
 if __name__ == '__main__':
     sys.exit(main() or 0)
